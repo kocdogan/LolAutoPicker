@@ -1,0 +1,17 @@
+# Visual Studio .vs folder (Root dizinde)
+.vs/
+
+# Bin ve Obj klasörleri (Alt klasörler dahil her yerde)
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio user/cache files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.csproj.user
+
+# OS generated files
+.DS_Store
+Thumbs.db
