@@ -22,6 +22,18 @@ namespace LolAutoPicker
     {
         public static bool IsEnglish = false;
 
+        private readonly Dictionary<string, int> spellsTR = new Dictionary<string, int>
+        {
+            {"Sıçra", 4}, {"Tutuştur", 14}, {"Çarp", 11}, {"Işınlan", 12},
+            {"Hayalet", 6}, {"Şifa", 7}, {"Bitkinlik", 3}, {"Bariyer", 21}, {"Arındır", 1}
+        };
+
+        private readonly Dictionary<string, int> spellsEN = new Dictionary<string, int>
+        {
+            {"Flash", 4}, {"Ignite", 14}, {"Smite", 11}, {"Teleport", 12},
+            {"Ghost", 6}, {"Heal", 7}, {"Exhaust", 3}, {"Barrier", 21}, {"Cleanse", 1}
+        };
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,25 +49,31 @@ namespace LolAutoPicker
                 });
             };
 
-            var spells = new Dictionary<string, int>
-            {
-             {"Sıçra", 4}, {"Tutuştur", 14}, {"Çarp", 11}, {"Işınlan", 12},
-             {"Hayalet", 6}, {"Şifa", 7}, {"Bitkinlik", 3}, {"Bariyer", 21}, {"Arındır", 1}
-            };
-
-            cmbSpell1.ItemsSource = spells;
-            cmbSpell2.ItemsSource = spells;
-
-            cmbSpell1.SelectedIndex = 0;
-            cmbSpell2.SelectedIndex = 1;
+            LoadSpellsToUI();
 
             this.Loaded += async (s, e) =>
             {
                 StatsService.Load();
                 await ChampionService.Load();
-
                 LoadStatsSilently();
             };
+        }
+
+        private void LoadSpellsToUI()
+        {
+            int selectedIndex1 = cmbSpell1.SelectedIndex > -1 ? cmbSpell1.SelectedIndex : 0;
+            int selectedIndex2 = cmbSpell2.SelectedIndex > -1 ? cmbSpell2.SelectedIndex : 1;
+
+            var currentSpells = IsEnglish ? spellsEN : spellsTR;
+
+            cmbSpell1.ItemsSource = null;
+            cmbSpell2.ItemsSource = null;
+
+            cmbSpell1.ItemsSource = currentSpells;
+            cmbSpell2.ItemsSource = currentSpells;
+
+            cmbSpell1.SelectedIndex = selectedIndex1;
+            cmbSpell2.SelectedIndex = selectedIndex2;
         }
 
         private void LogToUi(string msg)
@@ -138,6 +156,8 @@ namespace LolAutoPicker
                 txtStatus.Text = IsEnglish ? "CLIENT: DISCONNECTED" : "İSTEMCİ: BAĞLI DEĞİL";
             else
                 txtStatus.Text = IsEnglish ? "CLIENT: CONNECTED" : "İSTEMCİ: BAĞLI";
+
+            LoadSpellsToUI();
 
             LoadStatsSilently();
         }
